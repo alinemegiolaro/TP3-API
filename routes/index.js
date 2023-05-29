@@ -9,6 +9,8 @@ const usersController = require('../controllers/usersController');
 // /articles => GET
 router.get('/products', productsController.getProducts);
 
+router.get('/products/:id', productsController.getProductsById);
+
 // /categories => GET
 router.get('/categories', categoriesController.getCategories);
 

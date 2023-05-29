@@ -17,3 +17,18 @@ exports.getProducts = (req, res, next) => {
     }
   });
 };
+
+// Utilise la méthode findById() afin de récupérer un produit
+exports.getProductsById = (req, res, next) => {
+  Products.findById(req.params.id)
+  .then(product => {
+    res.status(200).json({
+      product: product
+    });
+  })
+  .catch(err => {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+  });
+};
