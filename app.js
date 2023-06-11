@@ -32,7 +32,7 @@ app.use(errorController.logErrors);
 // gestion des erreurs 404
 app.use(errorController.get404);
 
-mongoose.connect('mongodb://127.0.0.1:27017/tp3-api')
+mongoose.connect('mongodb+srv://admin:aSCyx4EcRH9ygEKa@cluster0.pria4k2.mongodb.net/tp3-api?retryWrites=true&w=majority')
   .then(() => {
     console.log('La connexion à la base de données est établie')
     app.listen(3000, () => {
