@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 // Importe les routes
 const indexRoutes = require('./routes/index');
+const authRoutes = require('./routes/auth');
 
 // Importe le controller des erreurs
 const errorController = require('./controllers/errorController');
@@ -23,6 +24,8 @@ app.use(express.urlencoded({
 
 
 // Utilisation des routes en tant que middleware
+// route /auth
+app.use('/auth', authRoutes);
 // route /
 app.use(indexRoutes);
 

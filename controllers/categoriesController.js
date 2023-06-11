@@ -35,17 +35,15 @@ exports.getCategoriesById = (req, res, next) => {
 
 // user admin pour crée une nouvelle catégorie
 exports.postCategories = (req, res, next) => {
-  // Verification user
-  if (req.user.role !== 'administrator') {
+  // Verification de la rôle de l'utilisateur
+  if (!req.user.role) {
     return res.status(401).json({
       message: 'Seuls les administrateurs peuvent créer des catégories.'
     });
   }
 
   const category = new Categories({
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image
+    name: req.body.name
   });
 
   category.save()
@@ -62,7 +60,51 @@ exports.postCategories = (req, res, next) => {
     });
 }
 
+exports.putCategorieById = (req, res, next) => {
+  // Verification de la rôle de l'utilisateur
+  if (!req.user.role) {
+    return res.status(401).json({
+      message: 'Seuls les administrateurs peuvent modifier des catégories.'
+    });
+  }
 
+  Categories.findById(req.params.id)
+    .then(category => {
+      category.name = req.body.name;
+      return category.save();
+    })
+    .then(result => {
+      res.status(200).json({
+        message: 'Catégorie modifiée !',
+        category: result
+      });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    })
+}
 
+exports.deleteCategorieById = (req, res, next) => {
+  // Verification de la rôle de l'utilisateur
+  if (!req.user.role) {
+    return res.status(401).json({
+      message: 'Seuls les administrateurs peuvent supprimer des catégories.'
+    });
+  }
 
-
+  Categories.findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.status(200).json({
+        message: 'Catégorie supprimée !'
+      });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    })
+}

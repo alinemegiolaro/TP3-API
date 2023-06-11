@@ -34,9 +34,9 @@ exports.getUsersById = (req, res, next) => {
 };
 
 // retourne les informations de l'utilisateur connecté - getUsersProfil
-exports.getUsersProfil = (req, res, next) => {
-  const userId = req.userId; 
-
+exports.getProfilConnectedUser = (req, res, next) => {
+  const userId = req.user.userId; 
+  console.log('USer: ' + userId);
   Users.findById(userId)
     .then(user => {
       if (!user) {
@@ -58,18 +58,19 @@ exports.getUsersProfil = (req, res, next) => {
 };
 
 // modifie l'utilisateur - putUsersById
-exports.putUsersById = (req, res, next) => {
+exports.changeUsersById = (req, res, next) => {
   console.log("Teste 1");
   console.log(req.params);
   console.log(req.body);
   const userId = req.params.id;
   console.log('USer: ' + userId);
-  //const loggedInUserId = req.user.id; // Supposons que l'ID de l'utilisateur connecté soit accessible via req.user.id
+  console.log(req.user);
+  const loggedInUserId = req.user.id; // Supposons que l'ID de l'utilisateur connecté soit accessible via req.user.id
 
-  // Vérifier si l'utilisateur connecté est le même que celui dont l'ID est passé en paramètre
-  // if (userId !== loggedInUserId) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
+  //Vérifier si l'utilisateur connecté est le même que celui dont l'ID est passé en paramètre
+  if (userId !== loggedInUserId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   Users.findById(userId)
     .then(user => {
@@ -78,7 +79,7 @@ exports.putUsersById = (req, res, next) => {
       }
 
       // Mettre à jour les champs autorisés uniquement
-      user.firstname = req.body.name;
+      user.firstname = req.body.firstname;
       user.lastname = req.body.lastname;
       user.email = req.body.email;
       user.city = req.body.city;
@@ -114,5 +115,16 @@ exports.deleteUsersById = (req, res, next) => {
   });
 };
 
-
+exports.isAdmin = (id) => {
+  Users.findById(id)
+  .then(user => {
+    if (!user.isAdmin) {
+      return false;
+    }
+    return true;
+  })
+  .catch(err => {
+    return false;
+  });
+}
 

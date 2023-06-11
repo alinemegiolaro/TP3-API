@@ -5,6 +5,9 @@ const router = express.Router();
 const productsController = require('../controllers/productsController');
 const categoriesController = require('../controllers/categoriesController');
 const usersController = require('../controllers/usersController');
+const isAuth = require('../middleware/is-auth');
+
+// --------------Routes pour les produits-------------------------
 
 // GET - retourne la liste de tous les produits
 router.get('/products', productsController.getProducts);
@@ -22,12 +25,24 @@ router.delete('/products/:id', productsController.deleteProductsById);
 router.get('/products/users/usersId', productsController.getProductsByUserId);
 //--------------------------------------------------------------
 
-//  /categories => GET
+// --------------Routes pour les catégories---------------------
+//  GET - retourne toutes les catégories.
 router.get('/categories', categoriesController.getCategories);
 
+// GET - retourne la catégorie par son id.
+router.get('/categories/:id', categoriesController.getCategoriesById);
 
+// POST - ajoute une catégorie.
+router.post('/categories', isAuth, categoriesController.postCategories);
 
+// PUT - modifie la catégorie.
+router.put('/categories/:id', isAuth, categoriesController.putCategorieById);
+
+// DELETE - supprime la catégorie.
+router.delete('/categories/:id', isAuth, categoriesController.deleteCategorieById);
 //--------------------------------------------------------------
+
+// --------------Routes pour les utilisateurs-------------------
 // /users => GET.
 router.get('/users', usersController.getUsers);
 
@@ -35,13 +50,14 @@ router.get('/users', usersController.getUsers);
 router.get('/users/:id', usersController.getUsersById);
 
 // GET - retourne les informations de l'utilisateur connecté.
-// router.get('/users/profil', usersController.getUsersProfil);
+router.get('/users/profil', isAuth, usersController.getProfilConnectedUser);
 
 // PUT - modifie l'utilisateur.
-router.put('/users/:id', usersController.putUsersById);
+router.put('/users/:id', isAuth, usersController.changeUsersById);
 
 // DELETE - supprime l'utilisateur.
 router.delete('/users/:id', usersController.deleteUsersById);
+//--------------------------------------------------------------
 
 // Export des routes pour utilisation dans app.js
 module.exports = router;
