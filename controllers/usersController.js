@@ -35,38 +35,24 @@ exports.getUsersById = (req, res, next) => {
 
 // retourne les informations de l'utilisateur connecté - getUsersProfil
 exports.getProfilConnectedUser = (req, res, next) => {
-  const userId = req.user.userId; 
-  console.log('USer: ' + userId);
+  const userId = req.user.userId;
   Users.findById(userId)
-    .then(user => {
-      if (!user) {
-        const error = new Error('Utilisateur non trouvé');
-        error.statusCode = 404;
-        throw error;
-      }
-
-      res.status(200).json({
-        user: user
-      });
-    })
-    .catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+  .then(user => {
+    res.status(200).json({
+      user: user
     });
+  })
+  .catch(err => {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+  });
 };
 
 // modifie l'utilisateur - putUsersById
 exports.changeUsersById = (req, res, next) => {
-  console.log("Teste 1");
-  console.log(req.params);
-  console.log(req.body);
   const userId = req.params.id;
-  console.log('USer: ' + userId);
-  console.log(req.user);
-  const loggedInUserId = req.user.id; // Supposons que l'ID de l'utilisateur connecté soit accessible via req.user.id
-
+  const loggedInUserId = req.user.userId;
   //Vérifier si l'utilisateur connecté est le même que celui dont l'ID est passé en paramètre
   if (userId !== loggedInUserId) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -102,7 +88,14 @@ exports.changeUsersById = (req, res, next) => {
 
 // supprime l'utilisateur - deleteUsersById
 exports.deleteUsersById = (req, res, next) => {
-  Users.findByIdAndRemove(req.params.id)
+  const userId = req.params.id;
+  const loggedInUserId = req.user.userId;
+  //Vérifier si l'utilisateur connecté est le même que celui dont l'ID est passé en paramètre
+  if (userId !== loggedInUserId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  Users.findByIdAndRemove(userId)
   .then(user => {
     res.status(200).json({
       user: user

@@ -50,13 +50,13 @@ router.get('/users', usersController.getUsers);
 router.get('/users/:id', usersController.getUsersById);
 
 // GET - retourne les informations de l'utilisateur connecté.
-router.get('/users/profil', isAuth, usersController.getProfilConnectedUser);
+router.get('/users/profil/:id', isAuth, usersController.getProfilConnectedUser);
 
 // PUT - modifie l'utilisateur.
 router.put('/users/:id', isAuth, usersController.changeUsersById);
 
 // DELETE - supprime l'utilisateur.
-router.delete('/users/:id', usersController.deleteUsersById);
+router.delete('/users/:id', isAuth, usersController.deleteUsersById);
 //--------------------------------------------------------------
 
 // Export des routes pour utilisation dans app.js
