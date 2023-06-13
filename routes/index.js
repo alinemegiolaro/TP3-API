@@ -16,13 +16,13 @@ router.get('/products', productsController.getProducts);
 router.get('/products/:id', productsController.getProductsById);
 
 // POST - ajoute un produit.
-router.post('/products', productsController.postProducts);
+router.post('/products', isAuth, productsController.postProducts);
 
 // DELETE - supprime le produit.
-router.delete('/products/:id', productsController.deleteProductsById);
+router.delete('/products/:id', isAuth, productsController.deleteProductsById);
 
 // GET - retourne la liste des produits vendus par l'utilisateur.
-router.get('/products/users/usersId', productsController.getProductsByUserId);
+router.get('/products/user/:userId', productsController.getProductsByUserId);
 //--------------------------------------------------------------
 
 // --------------Routes pour les catégories---------------------

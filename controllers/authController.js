@@ -13,18 +13,14 @@ exports.login = (req, res, next) => {
     User.findOne({ email: email })
         .then(user => {
             if(!user) {
-                const error = new Error('Utilisateur non trouvée');
-                error.statusCode = 404;
-                throw error;
+                return res.status(404).json({message: 'Utilisateur non trouvée'});
             }
             loadedUser = user;
             return bcrypt.compare(password, user.password);
         })
         .then(isEqual => {
             if(!isEqual) {
-                const error = new Error('Mot de passe incorrect');
-                error.statusCode = 401;
-                throw error;
+                return res.status(404).json({message: 'Mot de passe incorrect'});
             }
             const token = jwt.sign(
                 {

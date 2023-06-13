@@ -35,25 +35,15 @@ exports.getProductsById = (req, res, next) => {
 
 //crée un nouveau produit à vendre.
 exports.postProducts = (req, res, next) => {
-  const { id, title, description, price, categoryId, imageURL, userId, isSold, updatedAt, createdAt } = req.body;
-  console.log('Message 1');
-  console.log(title);
-  console.log('Message 2');
-  console.log(description);
-  console.log('Message 3');
-  console.log(price);
-  console.log('Message 4');
+  const { id, title, description, price, categoryId, imageURL } = req.body;
+  const loggedInUserId = req.user.userId;
   const product = new Products({
     title: title,
     description: description,
     price: price,
     categoryId: categoryId,
-    userId: userId,
-    isSold: isSold,
-    updatedAt: updatedAt,
-    createdAt: createdAt
+    userId: loggedInUserId
   });
-  console.log('Message 4.5');
   product.save()
   .then(() => {
     res.status(201).json({
@@ -69,12 +59,20 @@ exports.postProducts = (req, res, next) => {
 
 //supprime le produit.
 exports.deleteProductsById = (req, res, next) => {
+  const loggedInUserId = req.user.userId;
+  //Vérifier si l'utilisateur connecté est le même que celui dont l'ID est passé en paramètre
   Products.findById(req.params.id)
   .then(product => {
-    product.delete();
-    res.status(200).json({
+    //Vérifier si l'utilisateur connecté est le même que celui dont l'userID du produit
+    if (product.userId !== loggedInUserId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    } 
+    Products.findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.status(200).json({
       message: 'Product deleted successfully!'
-    });
+      });
+    })
   })
   .catch(err => {
     if (!err.statusCode) {
@@ -85,6 +83,7 @@ exports.deleteProductsById = (req, res, next) => {
 
 //retourne la liste des produits vendus par l'utilisateur.
 exports.getProductsByUserId = (req, res, next) => {
+  console.log(req.params.userId);
   Products.find({userId: req.params.userId})
   .then(products => {
     res.status(200).json({
