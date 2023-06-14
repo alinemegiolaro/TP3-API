@@ -24,6 +24,12 @@ exports.ajouteProduitCart = (req, res, next) => {
     const productId = req.body.productId;
     Produits.findById(productId)
     .then(product => {
+        if (!product) {
+            return res.status(404).json({ message: "Produit non trouvé" });
+        }
+        if (product.isSold) {
+            return res.status(404).json({ message: "Produit déjà vendu" });
+        }
         Users.findById(userId)
         .then(user => {
             user.cart.push(productId);
@@ -38,7 +44,7 @@ exports.ajouteProduitCart = (req, res, next) => {
         });
     })
     .catch(err => {
-        return res.status(500).json({ message: "Produit non toruvé" });
+        return res.status(500).json({ message: "Something didn't work!" });
     });
 }
 
@@ -59,6 +65,6 @@ exports.deleteProduitCart = (req, res, next) => {
         });
     })
     .catch(err => {
-        return res.status(500).json({ message: "Produit non trouvé" });
+        return res.status(500).json({ message: "Something didn't work!" });
     });
 }
