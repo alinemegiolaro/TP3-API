@@ -59,6 +59,6 @@ exports.deleteProduitCart = (req, res, next) => {
         });
     })
     .catch(err => {
-        return res.status(500).json({ message: "Produit non toruvé" });
+        return res.status(500).json({ message: "Produit non trouvé" });
     });
 }

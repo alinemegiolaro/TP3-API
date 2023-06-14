@@ -47,14 +47,14 @@ router.delete('/categories/:id', isAuth, categoriesController.deleteCategorieByI
 //--------------------------------------------------------------
 
 // --------------Routes pour les utilisateurs-------------------
+// GET - retourne les informations de l'utilisateur connecté.
+router.get('/users/profil', isAuth, usersController.getProfilConnectedUser);
+
 // /users => GET.
 router.get('/users', usersController.getUsers);
 
 // GET - retourne l'utilisateur.
 router.get('/users/:id', usersController.getUsersById);
-
-// GET - retourne les informations de l'utilisateur connecté.
-router.get('/users/profil/:id', isAuth, usersController.getProfilConnectedUser);
 
 // PUT - modifie l'utilisateur.
 router.put('/users/:id', isAuth, usersController.changeUsersById);

@@ -22,6 +22,9 @@ exports.getUsers = (req, res, next) => {
 exports.getUsersById = (req, res, next) => {
   Users.findById(req.params.id)
   .then(user => {
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.status(200).json({
       user: user
     });
@@ -35,18 +38,21 @@ exports.getUsersById = (req, res, next) => {
 
 // retourne les informations de l'utilisateur connecté - getUsersProfil
 exports.getProfilConnectedUser = (req, res, next) => {
+  console.log('getProfilConnectedUser');
+  console.log('test');
   const userId = req.user.userId;
   console.log(userId);
   Users.findById(userId)
   .then(user => {
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.status(200).json({
       user: user
     });
   })
   .catch(err => {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
+      return res.status(500).json({ message: "Something didn't work!" });
   });
 };
 
