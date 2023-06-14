@@ -42,22 +42,27 @@ exports.login = (req, res, next) => {
 };          
 
 exports.signup = (req, res, next) => {
-    const { firstName, lastName, email, city, password, isAdmin } = req.body;
+    console.log("Signup 123");
+    const { firstname, lastname, email, city, password } = req.body;
+    console.log(req.body);
+    console.log("Signup");
+    console.log("$2a$12$KYismqsuR0klaY7wymVBTu.iOehN4AbQSZD8l1zBjebu5scIzLq3C")
+    console.log(firstname)
+    console.log(lastname)
     bcrypt
         .hash(password, 12)
         .then(hashedPassword => {
             const user = new User({
-                firstName: firstName,
-                lastName: lastName,
+                firstname: firstname,
+                lastname: lastname,
                 email: email,
                 city: city,
                 password: hashedPassword,
-                isAdmin: isAdmin,
             });
             return user.save();
         })
         .then(result => {
-            res.status(201).json({Message: 'Utilisateur créé !', userId: result._id});
+            res.status(201).json({Message: 'Utilisateur créé !'});
         })
         .catch(err => {
             next(err);

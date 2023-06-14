@@ -96,3 +96,25 @@ exports.getProductsByUserId = (req, res, next) => {
     }
   });
 }
+
+exports.searchProducts = (req, res, next) => {
+  console.log(req.query.q)
+  const param = req.query.q //'/.*' + req.query.q + '.*/'
+  console.log(param)
+  console.log('/.*Vintage.*/')
+  Products.find({title: param})
+  .then(products => {
+    console.log(products)
+    if (!products) {
+      return res.status(401).json({ message: "Product don't found!" });
+    }
+    res.status(200).json({
+      products: products
+    });
+  })
+  .catch(err => {
+    if (!err.statusCode) {
+      return res.status(500).json({ message: "Something didn't work!" });
+    }
+  });
+}

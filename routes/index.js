@@ -5,6 +5,7 @@ const router = express.Router();
 const productsController = require('../controllers/productsController');
 const categoriesController = require('../controllers/categoriesController');
 const usersController = require('../controllers/usersController');
+const cartController = require('../controllers/cartController');
 const isAuth = require('../middleware/is-auth');
 
 // --------------Routes pour les produits-------------------------
@@ -23,6 +24,9 @@ router.delete('/products/:id', isAuth, productsController.deleteProductsById);
 
 // GET - retourne la liste des produits vendus par l'utilisateur.
 router.get('/products/user/:userId', productsController.getProductsByUserId);
+
+// GET - retourne la liste des produits par parametre.
+router.get('/search', productsController.searchProducts);
 //--------------------------------------------------------------
 
 // --------------Routes pour les catégories---------------------
@@ -57,6 +61,18 @@ router.put('/users/:id', isAuth, usersController.changeUsersById);
 
 // DELETE - supprime l'utilisateur.
 router.delete('/users/:id', isAuth, usersController.deleteUsersById);
+//--------------------------------------------------------------
+
+// --------------Routes pour le cart ---------------------------
+// GET - retourne le panier de l'utilisateur connecté.
+router.get('/cart', isAuth, cartController.getCartConnectedUser);
+
+// PUT - ajoute un produit au panier de l'utilisateur connecté.
+router.put('/cart', isAuth, cartController.ajouteProduitCart);
+
+// DELETE - supprime un produit du panier de l'utilisateur connecté.
+router.delete('/cart/:id', isAuth, cartController.deleteProduitCart);
+
 //--------------------------------------------------------------
 
 // Export des routes pour utilisation dans app.js

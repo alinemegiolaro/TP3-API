@@ -98,8 +98,11 @@ exports.deleteUsersById = (req, res, next) => {
 
   Users.findByIdAndRemove(userId)
   .then(user => {
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.status(200).json({
-      user: user
+      message: "User deleted successfully!"
     });
   })
   .catch(err => {
@@ -118,7 +121,7 @@ exports.isAdmin = (id) => {
     return true;
   })
   .catch(err => {
-    return false;
+    return res.status(500).json({ message: "Ce n'a pas été possible de supprimer l'utilisateur." });
   });
 }
 

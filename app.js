@@ -35,6 +35,19 @@ app.use(errorController.logErrors);
 // gestion des erreurs 404
 app.use(errorController.get404);
 
+// Configuration des CORS
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  // res.setHeader('Access-Control-Allow-Origin', 'https://monsupersite.com');
+
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+  );
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
 mongoose.connect('mongodb+srv://admin:aSCyx4EcRH9ygEKa@cluster0.pria4k2.mongodb.net/tp3-api?retryWrites=true&w=majority')
   .then(() => {
     console.log('La connexion à la base de données est établie')
