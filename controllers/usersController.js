@@ -38,10 +38,7 @@ exports.getUsersById = (req, res, next) => {
 
 // retourne les informations de l'utilisateur connecté - getUsersProfil
 exports.getProfilConnectedUser = (req, res, next) => {
-  console.log('getProfilConnectedUser');
-  console.log('test');
   const userId = req.user.userId;
-  console.log(userId);
   Users.findById(userId)
   .then(user => {
     if (!user) {
