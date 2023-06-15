@@ -47,7 +47,7 @@ exports.postProducts = (req, res, next) => {
   product.save()
   .then(() => {
     res.status(201).json({
-      message: 'Product created successfully!'
+      message: 'Produit créé avec succès!'
     });
   })
   .catch(err => {
@@ -65,12 +65,12 @@ exports.deleteProductsById = (req, res, next) => {
   .then(product => {
     //Vérifier si l'utilisateur connecté est le même que celui dont l'userID du produit
     if (product.userId !== loggedInUserId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Non autorisé" });
     } 
     Products.findByIdAndRemove(req.params.id)
     .then(() => {
       res.status(200).json({
-      message: 'Product deleted successfully!'
+      message: 'Produit supprimé avec succès!'
       });
     })
   })
@@ -97,16 +97,13 @@ exports.getProductsByUserId = (req, res, next) => {
   });
 }
 
+// recherche de produits par titre
 exports.searchProducts = (req, res, next) => {
-  console.log(req.query.q)
-  const param = req.query.q //'/.*' + req.query.q + '.*/'
-  console.log(param)
-  console.log('/.*Vintage.*/')
-  Products.find({title: param})
+  const param = req.query.q
+  Products.find({title: {$regex: param, $options: 'i'}})
   .then(products => {
-    console.log(products)
     if (!products) {
-      return res.status(401).json({ message: "Product don't found!" });
+      return res.status(401).json({ message: "Produit introuvable!" });
     }
     res.status(200).json({
       products: products
@@ -114,7 +111,7 @@ exports.searchProducts = (req, res, next) => {
   })
   .catch(err => {
     if (!err.statusCode) {
-      return res.status(500).json({ message: "Something didn't work!" });
+      return res.status(500).json({ message: "Quelque chose n'a pas fonctionné!" });
     }
   });
 }

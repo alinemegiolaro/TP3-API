@@ -23,7 +23,7 @@ exports.getUsersById = (req, res, next) => {
   Users.findById(req.params.id)
   .then(user => {
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Utilisateur non trouvé!" });
     }
     res.status(200).json({
       user: user
@@ -42,14 +42,14 @@ exports.getProfilConnectedUser = (req, res, next) => {
   Users.findById(userId)
   .then(user => {
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Utilisateur non trouvé!" });
     }
     res.status(200).json({
       user: user
     });
   })
   .catch(err => {
-      return res.status(500).json({ message: "Something didn't work!" });
+      return res.status(500).json({ message: "Quelque chose n'a pas fonctionné!" });
   });
 };
 
@@ -59,13 +59,13 @@ exports.changeUsersById = (req, res, next) => {
   const loggedInUserId = req.user.userId;
   //Vérifier si l'utilisateur connecté est le même que celui dont l'ID est passé en paramètre
   if (userId !== loggedInUserId) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Non autorisé" });
   }
 
   Users.findById(userId)
     .then(user => {
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "Utilisateur non trouvé!" });
       }
 
       // Mettre à jour les champs autorisés uniquement
@@ -96,16 +96,16 @@ exports.deleteUsersById = (req, res, next) => {
   const loggedInUserId = req.user.userId;
   //Vérifier si l'utilisateur connecté est le même que celui dont l'ID est passé en paramètre
   if (userId !== loggedInUserId) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Non autorisé" });
   }
 
   Users.findByIdAndRemove(userId)
   .then(user => {
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Utilisateur non trouvé!" });
     }
     res.status(200).json({
-      message: "User deleted successfully!"
+      message: "Utilisateur supprimé avec succès!"
     });
   })
   .catch(err => {

@@ -4,6 +4,7 @@
 const Users = require('../models/users');
 const Produits = require('../models/products');
 
+// récupér tous les produits
 exports.getCartConnectedUser = (req, res, next) => {
     const userId = req.user.userId;
     Users.findById(userId)
@@ -19,6 +20,7 @@ exports.getCartConnectedUser = (req, res, next) => {
     });
 }
 
+//ajoute le produit au cart.
 exports.ajouteProduitCart = (req, res, next) => {
     const userId = req.user.userId;
     const productId = req.body.productId;
@@ -44,16 +46,14 @@ exports.ajouteProduitCart = (req, res, next) => {
         });
     })
     .catch(err => {
-        return res.status(500).json({ message: "Something didn't work!" });
+        return res.status(500).json({ message: "Quelque chose n'a pas fonctionné!" });
     });
 }
 
+//supprime le produit.
 exports.deleteProduitCart = (req, res, next) => {
     const userId = req.user.userId;
     const productId = req.params.id;
-    console.log('deleteProduitCart');
-    console.log(productId);
-    console.log(userId);
     Users.findById(userId)
     .then(user => {
         user.cart.pull(productId);
@@ -65,6 +65,6 @@ exports.deleteProduitCart = (req, res, next) => {
         });
     })
     .catch(err => {
-        return res.status(500).json({ message: "Something didn't work!" });
+        return res.status(500).json({ message: "Quelque chose n'a pas fonctionné!" });
     });
 }
